@@ -191,12 +191,16 @@ wq!
 variable with the key GOOGLE_CREDENTIALS, and paste the contents of your changed keyfile as the value. 
 Make sure all 'flags' (protected, masked and expanded variable) are turned off, you don't need this. 
 Also make sure that Environment scope stays on 'All'. 
+
 5b. **If you are using GitHub**, in your repository, go to **Settings** → **Secrets and Variables** → **Actions** -> New repository secret, and 
 create a secret named GOOGLE_CREDENTIALS, and paste the contents of your changed keyfile as the value. 
+
 6a. **If you are using GitLab**, in your local repository, go to .gitlab-ci.yml and 
 uncomment the whole script ( CTRL+A and CTRL+/)
+
 6b. **If you are using GitHub**, in your local repository, go to .github/workflows/terraform.yml and uncomment the whole 
 script ( CTRL+A and CTRL+/)
+
 7. Make sure your variables are all added as intended in prd.tfvars, stg.tfvars and dev.tfvars
 8. Push your changes. You will notice that on a separate branch the pipeline will only run until 'terraform plan'. 
 The 'terraform apply', and thus the actual deployment will only be done when merging / pushing to the 

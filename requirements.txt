@@ -7,4 +7,4 @@ google-cloud-logging
 google-cloud-bigquery
 python-dotenv
 openpyxl
-cnd-tools[gcp]>=1.6.0
+cnd-tools[gcp]>=1.8.2
