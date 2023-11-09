@@ -3,7 +3,8 @@ locals {
     cloudbuild = "cloudbuild.googleapis.com",
     cloudresourcemanager = "cloudresourcemanager.googleapis.com",
     iam = "iam.googleapis.com",
-    serviceusage = "serviceusage.googleapis.com"
+    serviceusage = "serviceusage.googleapis.com",
+    eventarc = "eventarc.googleapis.com",
   }
   terraform_permissions = {
     editor = "roles/editor",
