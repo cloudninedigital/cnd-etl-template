@@ -10,6 +10,10 @@ variable "documentation" {
 # bq-executor job failed
 This policy is to alert when bq-executor job fails.
 
+## Failed Job
+
+$${log.extracted_labels.job_name}
+
 ## Failed query
 
 $${log.extracted_labels.query}
@@ -38,6 +42,8 @@ variable "label_extractors" {
     default = {
     query = "EXTRACT(protoPayload.metadata.jobChange.job.jobConfig.queryConfig.query)"
     error = "EXTRACT(protoPayload.metadata.jobChange.job.jobStatus.errorResult.message)"
+    # job_name = "EXTRACT(protoPayload.metadata.jobChange.job.jobName)"
+    job_name = "REGEXP_EXTRACT(protoPayload.metadata.jobChange.job.jobName, \"projects\\/.+\\/jobs\\/([a-zA-Z\\-]+)\\-bq-executor\")"
   }
 }
 
