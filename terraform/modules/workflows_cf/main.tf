@@ -238,6 +238,7 @@ resource "google_cloud_scheduler_job" "workflow" {
   name        = "${var.name}-scheduler"
   description = "Cloud Scheduler for Workflow Job ${var.name}"
   schedule    = var.schedule
+  time_zone   = var.time_zone
   region      = var.region
 
   http_target {
