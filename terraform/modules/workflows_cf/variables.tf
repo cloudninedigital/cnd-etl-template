@@ -80,3 +80,9 @@ variable "alert_email_addresses" {
     cnd_alerts = "alerting@cloudninedigital.nl"
   }
 }
+
+variable "time_zone" {
+  description = "The timezone in which to set the schedule."
+  type        = string
+  default     = "Etc/UTC"
+}
