@@ -82,7 +82,7 @@ variable "alert_email_addresses" {
 }
 
 variable "time_zone" {
-  description = "The timezone in which to set the schedule."
+  description = "The timezone in which to set the schedule. For more info on which are valid timezone options, check out https://en.wikipedia.org/wiki/List_of_tz_database_time_zones"
   type        = string
   default     = "Etc/UTC"
 }
