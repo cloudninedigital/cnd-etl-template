@@ -38,7 +38,7 @@ variable "dataform_pipelines" {
 }
 
 variable "workflow_type" {
-  description= "type of workflow to be triggered (determines the template being used). options are 'cf' (for cloud_functions) and 'dataform'"
+  description= "type of workflow to be triggered (determines the template being used). options are 'cf' (for cloud_functions), 'dataform', 'airflow' and 'dbt'"
   type = string
   default = "cf"
 }
@@ -65,6 +65,37 @@ variable "dataform_region" {
   description = "Region where dataform is deployed."
   type = string
   default     = "europe-west3"
+}
+
+variable "airflow_server_domain" {
+  description= "server domain of airflow (without https://)"
+  type=string
+  default=""
+}
+
+variable "airflow_dags" {
+  description= "airflow dags (if workflow type == airflow)"
+  type=list
+  default=[{dag_id: "exampleid"}]
+}
+
+variable "dbt_jobs" {
+  description= "dbt jobs (if workflow type == dbt)"
+  type=list
+  default=[{job_id: "exampleid"}]
+}
+
+variable "dbt_account_id" {
+  description= "dbt jobs (if workflow type == dbt)"
+  type=string
+  default=""
+}
+
+
+variable "dbt_token_secret" {
+  description="dbt token secret name (to be taken from google_secret_manager)"
+  type=string
+  default=""
 }
 
 variable "bucket_name" {

@@ -114,7 +114,9 @@ resource "google_project_service" "workflows" {
 }
 
 
-
+data "google_secret_manager_secret_version" "dbt_token_secret" {
+  secret = var.dbt_token_secret
+}
 
 
 
@@ -131,7 +133,18 @@ resource "google_workflows_workflow" "workflows_instance" {
     region         = var.dataform_region,
     dataform_pipelines = var.dataform_pipelines,
     trigger_type   = var.trigger_type
-  }):  templatefile("modules/workflows/workflow_templates/workflows_cf_template.tftpl", {
+  }) : var.workflow_type == "airflow" ? templatefile("modules/workflows/workflow_templates/workflows_airflow_template.tftpl", {
+    project        = var.project,
+    server_domain  = var.airflow_server_domain
+    dags           = var.airflow_dags,
+    trigger_type   = var.trigger_type
+  }) : var.workflow_type == "dbt" ? templatefile("modules/workflows/workflow_templates/workflows_dbt_template.tftpl", {
+    project        = var.project,
+    dbt_runs       = var.dbt_jobs,
+    account_id     = var.dbt_account_id
+    trigger_type   = var.trigger_type
+    dbt_token      = data.google_secret_manager_secret_version.dbt_token_secret.secret_data
+  }) : templatefile("modules/workflows/workflow_templates/workflows_cf_template.tftpl", {
     project        = var.project,
     region         = var.functions_region,
     cloudfunctions = var.cloudfunctions,

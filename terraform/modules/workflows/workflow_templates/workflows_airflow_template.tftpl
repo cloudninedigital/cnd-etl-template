@@ -1,0 +1,53 @@
+{"main":
+    {%{if trigger_type == "bq" || trigger_type == "gcs"}"params":  ["event"],%{endif}
+    "steps": [
+        "conditionalSwitch": {
+            "switch": [{
+                "condition": "$${get_type(map.get(event.data.protoPayload.metadata, \"tableDataChange\")) == \"null\" or int(event.data.protoPayload.metadata.tableDataChange.insertedRowsCount) < 1 }",
+                "return": "flow halted because source table for flow was not created / inserted (i.e. this might have been the job reference logging instead of the actual table update)" 
+            }]
+        },
+        %{ for index, dag in dags ~}
+        {
+        
+        "step_${index}": {
+            "call": "http.post",
+            "args": {
+                "url": "https://${server_domain}/api/v1/dags/{dag.dag_id}/dagRuns",
+                "timeout": 1800.0,
+                %{if (trigger_type == "bq" || trigger_type == "gcs") && index == 0}
+                "body": { 
+                "conf": {"event": "$${event}",
+                         "table": "$${text.split(text.split(event.data.protoPayload.resourceName, \"datasets/\")[1], \"/tables\")[0] + \".\" + text.split(event.data.protoPayload.resourceName, \"/tables/\")[1]}"}
+                },
+                %{endif}
+                "headers": { 
+                    "Content-type": "application/json",
+                    "charset": "utf-8"
+                },
+                "auth": {
+                    "type": "OIDC"
+                }
+            },
+            "result": "step_${index}_return_value" }
+        }, 
+        {
+            "logStep_${index}_${dag.name}": {
+              "call": "sys.log",
+              "args": {
+                "severity": "INFO",
+                "json": {
+                    "step": "step_${index}",
+                    "function": "${dag.name}",
+                    "output": "$${step_${index}_return_value.body}",
+                    "code": "$${step_${index}_return_value.code}",
+                    "headers": "$${step_${index}_return_value.headers}"
+                 }
+              }
+            }
+          }
+    {if index < length(dags) -1},%{endif} %{endfor} 
+    
+    ]        
+} 
+}
