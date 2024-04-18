@@ -13,9 +13,9 @@
         "step_${index}": {
             "call": "http.post",
             "args": {
-                "url": "https://${server_domain}/api/v1/dags/{dag.dag_id}/dagRuns",
+                "url": "https://${server_domain}/api/v1/dags/${dag.dag_id}/dagRuns",
                 "timeout": 1800.0,
-                %{if (trigger_type == "bq" || trigger_type == "gcs") && index == 0}
+                %{if (trigger_type == "bq" || trigger_type == "gcs")}
                 "body": { 
                 "conf": {"event": "$${event}",
                          "table": "$${text.split(text.split(event.data.protoPayload.resourceName, \"datasets/\")[1], \"/tables\")[0] + \".\" + text.split(event.data.protoPayload.resourceName, \"/tables/\")[1]}"}

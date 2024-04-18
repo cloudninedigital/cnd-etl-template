@@ -13,7 +13,7 @@
         "step_${index}": {
             "call": "http.post",
             "args": {
-                "url": "https://cloud.getdbt.com/api/v2/accounts/{account_id}/jobs/{job_id}/run/",
+                "url": "https://cloud.getdbt.com/api/v2/accounts/${account_id}/jobs/{job.job_id}/run/",
                 "timeout": 1800.0,
                 %{if (trigger_type == "bq" || trigger_type == "gcs") && index == 0}
                 "body": { 
@@ -23,7 +23,8 @@
                 %{endif}
                 "headers": { 
                     "Content-type": "application/json",
-                    "charset": "utf-8"
+                    "charset": "utf-8",
+                    "Authorization": "Token {dbt_token}"
                 },
                 "auth": {
                     "type": "OIDC"
