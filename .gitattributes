@@ -1,0 +1,4 @@
+# Shell scripts must keep LF line endings, also when cloned on Windows
+# (core.autocrlf=true); otherwise ./helpers/*.sh fail with "bash\r".
+*.sh     text eol=lf
+*.tftpl  text eol=lf
